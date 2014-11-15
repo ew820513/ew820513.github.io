@@ -1,0 +1,98 @@
+html {
+	overflow-y: scroll;
+}
+
+body {
+	position: relative;
+	min-height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+main{
+	margin: auto;
+	max-width: 800px;
+	overflow: auto;
+}
+
+p{
+	font-size:19px;
+}
+
+.siteNavBar{
+	width: 100%;
+	position: relative;
+	background-color: #FFC0CB;
+	margin: auto;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+	line-height: 80px;
+}
+
+.siteActionContainer{
+	height: 70px;
+	margin: 0 auto;
+	max-width: 800px;
+}
+
+.logo{
+	float: left;
+	margin: auto;
+	font-size: 40px;
+}
+
+.siteAction{
+	position: relative;
+	line-height: normal;
+	float: right;
+	margin: 0;
+}
+
+.siteAction p{
+	margin: 0;
+}
+
+.personalLink{
+	display: inline;
+	margin-left: 25px;
+}
+
+.siteNavContainer{
+	display: block;
+	position: relative;
+	margin: auto;
+	width: 100%;
+	background-color: #FF69B4;
+	overflow: auto;
+	line-height: 60px;
+}
+
+.siteNavContainer ul{
+	position: relative;
+	list-style: none;
+	margin: auto;
+	padding: 0;
+	top: 0px;
+	left: 0px;
+	font-size: 20px;
+	overflow: hidden;
+	max-width: 800px;
+}
+
+.siteNavContainer ul li{
+	float: left;
+	display: inline;
+	margin: 0;
+}
+
+.siteNavContainer ul li:hover{
+	display: inline;
+	background-color: #FF1493;
+}
+
+.siteNavContainer ul li a{
+	padding: 30px 20px;
+	color: #000000;
+	text-decoration: none;
+}

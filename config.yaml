@@ -59,7 +59,7 @@ params:
   profileMode:
     enabled: true # needs to be explicitly set
     title: Eric Wang
-    subtitle: "Meet Eric, an AWS Cloud Architect who loves a challenge and thrives on critical thinking and problem-solving. His personal blog is where they share his cloud journey, including tutorials and unique encounters. Join Eric as they share his insights and knowledge in the ever-changing world of cloud computing."
+    subtitle: "Meet Eric, an AWS Cloud Architect who loves a challenge and thrives on critical thinking and problem-solving. This is his personal blog where he share his cloud journey, including tutorials and unique encounters, and occasionally, interesting topics that gets his attention. Join Eric as his share his insights and knowledge in the ever-changing world of technology."
     imageUrl: gravatar.jpg
     imageWidth: 120
     imageHeight: 120
@@ -79,9 +79,9 @@ params:
 
   socialIcons:
     - name: linkedin
-      url: "https://twitter.com/"
+      url: "https://www.linkedin.com/in/ericwangin/"
     - name: github
-      url: "https://github.com/"
+      url: "https://github.com/ew820513"
 
   # analytics:
   #   google:

@@ -1,7 +1,7 @@
 ---
 title: "Taming AWS Security Group Sprawl: A Practical Guide to Network Auditing"
 date: 2026-07-12
-draft: true
+draft: false
 tags: ["architecture", "aws", "networking", "security"]
 ---
 

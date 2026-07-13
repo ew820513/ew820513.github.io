@@ -101,7 +101,7 @@ Many teams create one SG per application tier (web, app, data) that defines the 
   "Description": "Checks that Security Groups don't allow unrestricted access to common ports",
   "Source": {
     "Owner": "AWS",
-    "SourceIdentifier": "SECURITY_GROUPS_RESTRICTED_INBOUND"
+    "SourceIdentifier": "restricted-common-ports"
   }
 }
 ```

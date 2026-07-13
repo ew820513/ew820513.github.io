@@ -192,10 +192,13 @@ if __name__ == '__main__':
 ```
 
 Run this weekly via cron:
+
 ```bash
 # Add to crontab
 0 9 * * 1 python3 /path/to/security_group_audit.py
 ```
+
+**For production environments**, consider deploying this audit as a **custom Lambda function** triggered on a schedule via EventBridge (CloudWatch Events). This removes the need for a dedicated server and integrates with incident response workflows. You can also wrap it as a **custom AWS Config rule** (a Lambda-backed Config rule) so violations appear alongside managed rules in the Config dashboard — giving you a single pane of glass for both built-in and custom compliance checks.
 
 ## Next Steps
 

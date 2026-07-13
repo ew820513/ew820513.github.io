@@ -9,7 +9,7 @@ tags: ["architecture", "aws", "networking", "security"]
 
 Security Group sprawl is a common day-to-day problem that emerges in growing AWS environments. You start with a few clean Security Groups, but over time they multiply uncontrollably — dozens of groups with overlapping rules, unclear purposes, and mysterious inbound/outbound connections. When something breaks or you need to audit for compliance, you're left sifting through a tangled web of rules that nobody fully understands. Network troubleshooting becomes guesswork, and security reviews take days instead of hours.
 
-As a mid-level engineer, you'll encounter this when:
+**A practicing engineer will encounter this when:**
 - Onboarding a new service and finding 57 Security Groups with unclear naming
 - Debugging connectivity issues where traffic should flow but doesn't
 - Security audits where you need to prove least-privilege access but rules contradict each other

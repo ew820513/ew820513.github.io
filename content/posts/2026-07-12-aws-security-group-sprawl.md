@@ -1,6 +1,6 @@
 ---
 title: "Taming AWS Security Group Sprawl: A Practical Guide to Network Auditing"
-date: $(date -I)
+date: 2026-07-12
 draft: true
 tags: ["architecture", "aws", "networking", "security"]
 ---
@@ -26,15 +26,15 @@ The core issue is that Security Groups lack inherent structure — they're just 
 Rather than generic names like `sg-123abc` or `web-server`, I recommend a structured format:
 
 ```
-{environment}-{service}-{traffic-direction}-{protocol}
+{environment}-{service}-{purpose}-{protocol}
 ```
 
 Examples:
-- `prod-api-ingress-http` – HTTPS from ALB to API servers
-- `prod-api-egress-redis` – Redis access from API to cache
-- `shared-bastion-ingress-ssh` – SSH from jump box to all instances
+- `prod-api-https` – HTTPS traffic for the API service
+- `prod-api-redis` – Redis access for the API service
+- `prod-bastion-admin` – Administrative access via the bastion host
 
-**Why this matters**: When you see `stg-monolith-vpc-pgsql-ingress` in a list, you immediately know it handles PostgreSQL traffic into the monolith service. This cuts investigation time dramatically because you can eyeball a rule and understand its intent.
+**Why this matters**: When you see `stg-monolith-pgsql` in a list, you immediately know it handles PostgreSQL traffic into the monolith service. This cuts investigation time dramatically because you can eyeball a rule and understand its intent.
 
 **Trade-offs**: Slightly longer names, but the clarity payoff outweighs the typing cost. You'll spend less time in documentation and more time fixing problems.
 
@@ -81,15 +81,15 @@ ingress {
 
 **Why this matters**: Security Group references create intentional coupling — you can only access this resource if you're running in an approved source Security Group. This enables least privilege without managing IP allocations, and when instances are terminated, their access disappears automatically.
 
-### 4. **Enforce Rule Direction Semantics**
+### 4. **Scope Security Groups by Service Tier, Not Traffic Direction**
 
-**Decision**: Separate ingress and egress rules into distinct Security Groups.
+**Decision**: Use one Security Group per application tier or service, each containing both ingress and egress rules.
 
-Many teams create monolithic SGs that mix inbound and outbound rules. Instead, create:
-- One SG for traffic *received* (ingress-focused)
-- One SG for traffic *sent* (egress-focused)
+Many teams create one SG per application tier (web, app, data) that defines the full network contract for that tier. For example, a web-tier SG allows HTTPS inbound from the ALB and all necessary outbound traffic; an app-tier SG allows inbound from the web tier and outbound to the data tier. Keeping both directions in one SG per tier maintains a clear "this is how this component communicates with the world" contract.
 
-This pattern mirrors the AWS "security group as firewall" mental model and makes rule auditing easier because each group has a single responsibility.
+**Why this works**: AWS Security Groups are **stateful** — response traffic for allowed connections is automatically permitted regardless of the corresponding direction's rules. Separating ingress and egress into distinct SGs adds no security benefit, doubles your SG count (exacerbating sprawl), and increases administrative overhead with no defensive gain.
+
+**Anti-pattern**: Creating separate `-ingress-` and `-egress-` SGs for the same service. This doubles the number of SGs you manage, makes it harder to reason about a component's network footprint, and runs counter to AWS best practices.
 
 ### 5. **Implement Automated Auditing with AWS Config**
 

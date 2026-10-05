@@ -1,6 +1,6 @@
 ---
 title: "Postgres Connection-Pool Exhaustion Under Burst Load: Sizing, PgBouncer, and a 3-Command Runbook"
-date: 2026-07-12
+date: 2026-10-04
 draft: true
 tags: ["database", "postgres", "pgbouncer", "scaling", "incident-response"]
 ---
@@ -25,7 +25,7 @@ Postgres max_connections (default)          =  100
 => 100 connections rejected. Service degrades for everyone.
 ```
 
-This is the single most common cloud-DB incident a mid-level engineer hits the first time they scale out. It feels like a database problem; it's really a **topology and capacity-planning** problem. This post gives you the mental model, a sizing formula, a minimal PgBouncer config, and a 3-command runbook you can use tomorrow.
+This is the single most common cloud-DB incident teams hit the first time they scale out. It feels like a database problem; it's really a **topology and capacity-planning** problem. This post gives you the mental model, a sizing formula, a minimal PgBouncer config, and a 3-command runbook you can use tomorrow.
 
 ## Why app-side pools alone don't fix this
 

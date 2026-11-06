@@ -1,7 +1,7 @@
 ---
 title: "Terraform State Locking in CI/CD: Patterns That Prevent Conflicts Without Sacrificing Deploy Speed"
-date: 2026-07-12
-draft: true
+date: 2026-11-06
+draft: false
 tags: ["terraform", "cicd", "infrastructure-as-code", "state-management", "aws", "dynamodb"]
 ---
 

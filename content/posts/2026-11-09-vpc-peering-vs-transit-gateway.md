@@ -5,7 +5,7 @@ draft: true
 tags: ["architecture", "cloud"]
 ---
 
-# VPC Peering vs Transit Gateway: Cost vs Complexity vs Scale in Multi-Account AWS
+# VPC peering vs Transit Gateway: cost vs complexity vs scale in multi-account AWS
 
 You have 15 AWS accounts — prod, staging per team, shared services — and they all need to talk to each other. Two accounts? A single VPC peering connection and you're done. Fifteen accounts? Suddenly you're looking at 105 peering connections, route tables that span multiple pages, and DNS resolution that fails silently across peering links.
 
@@ -20,7 +20,7 @@ A peering mesh scales quadratically. With N accounts, you need N × (N−1) / 2 
 - Security group rules referencing the peer's CIDR (or vice versa)
 - DNS configuration so private hostnames resolve across the link
 
-The breaking point isn't the connection count itself — it's the *ops surface area*. Adding a new account means touching N existing accounts' route tables and security groups. Transitive routing doesn't exist: if A peers with B, and B peers with C, A cannot reach C without an explicit A↔C peering connection. And overlapping CIDR ranges kill peering outright — you can't peer two VPCs with overlapping CIDRs, period.
+The breaking point isn't the connection count itself. It's the ops surface area. Adding a new account means touching N existing accounts' route tables and security groups. Transitive routing doesn't exist: if A peers with B, and B peers with C, A cannot reach C without an explicit A↔C peering connection. And overlapping CIDR ranges kill peering outright — you can't peer two VPCs with overlapping CIDRs.
 
 This is exactly why the mesh feels manageable at 2–3 accounts and unsustainable at 15.
 
@@ -60,7 +60,7 @@ tgw_monthly       = T × $0.06 + N × $14.40              # $14.40 = $0.02/hr ×
 | 15 (105 conns) | $10.50 | $52.50 | $105.00 | $525.00 |
 | TGW (any N) | $0.60 + N×$14.40 | $3.00 + N×$14.40 | $6.00 + N×$14.40 | $30.00 + N×$14.40 |
 
-For 15 accounts at 100 GB/month, peering's *connection overhead* alone (~$10.50) starts approaching TGW's attachment fees (~$21.60), before you count the engineer time spent touching 105 route tables every time you add an account.
+For 15 accounts at 100 GB/month, peering's connection overhead alone (~$10.50) starts approaching TGW's attachment fees (~$21.60), before you count the engineer time spent touching 105 route tables every time you add an account.
 
 ## DNS and Service Discovery
 
@@ -72,8 +72,8 @@ TGW centralizes this. Route 53 Resolver endpoints attach to the TGW, and private
 
 This is the architectural difference that matters most:
 
-- **Peering:** point-to-point only. A ↔ B, B ↔ C, but A cannot reach C through B. Every pair that needs to talk gets its own peering connection.
-- **TGW:** hub-and-spoke. A → TGW → C works out of the box via route tables on the TGW. Add a new account and it can reach every existing spoke with one attachment, not N new connections.
+- Peering: point-to-point only. A ↔ B, B ↔ C, but A cannot reach C through B. Every pair that needs to talk gets its own peering connection.
+- TGW: hub-and-spoke. A → TGW → C works out of the box via route tables on the TGW. Add a new account and it can reach every existing spoke with one attachment, not N new connections.
 
 If your architecture has a shared-services pattern (all accounts reach a central logging/security/account VPC), TGW's transitive routing is a natural fit. If it's strictly pairwise (prod talks to staging, nothing else), peering is simpler.
 
@@ -81,7 +81,7 @@ If your architecture has a shared-services pattern (all accounts reach a central
 
 Peering gives you granular isolation: each connection is its own boundary, and security group rules are explicit per peer. The downside is you manage N×(N−1)/2 rule sets, and it's easy to forget one when onboarding a new team.
 
-TGW centralizes governance — security groups and network ACLs propagate across attachments — but that central model can be *too* permissive if you're not careful. A misconfigured TGW route table gives an account reach into every spoke. The mitigations:
+TGW centralizes governance — security groups and network ACLs propagate across attachments — but that central model can be too permissive if you're not careful. A misconfigured TGW route table gives an account reach into every spoke. The mitigations:
 
 - Use TGW route tables per environment (prod, staging, shared services) rather than one giant table.
 - Attach VPC resource policies (S3, etc.) so even network reachability doesn't imply data access.
@@ -91,9 +91,9 @@ TGW centralizes governance — security groups and network ACLs propagate across
 
 You don't have to choose once and never change. A pragmatic rollout:
 
-1. **N ≤ 5 accounts, low traffic (< 50 GB/month):** Start with VPC peering. It's free operationally at this size and you learn your actual traffic patterns before paying for TGW.
-2. **N ≥ 8 accounts or traffic > 100 GB/month:** Move to TGW. The attachment fee is cheaper than the engineer time you'd spend on the peering mesh.
-3. **Hybrid transition:** Keep peering for latency-sensitive or isolated workloads (e.g., database replication between two specific accounts), and route general cross-account traffic through TGW. TGW supports inter-peering attachments so the two can coexist during migration.
+1. N ≤ 5 accounts, low traffic (< 50 GB/month): Start with VPC peering. It's free operationally at this size and you learn your actual traffic patterns before paying for TGW.
+2. N ≥ 8 accounts or traffic > 100 GB/month: Move to TGW. The attachment fee is cheaper than the engineer time you'd spend on the peering mesh.
+3. Hybrid transition: Keep peering for latency-sensitive or isolated workloads (e.g., database replication between two specific accounts), and route general cross-account traffic through TGW. TGW supports inter-peering attachments so the two can coexist during migration.
 
 ### Decision Guidance
 

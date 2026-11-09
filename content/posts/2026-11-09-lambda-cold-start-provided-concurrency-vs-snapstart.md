@@ -1,7 +1,7 @@
 ---
 title: "Lambda Cold Starts: Choosing Between Provisioned Concurrency, SnapStart, and Code-Level Optimization"
 date: 2026-11-09
-draft: true
+draft: false
 tags: ["aws", "lambda", "serverless", "performance", "cold-start", "provisioned-concurrency", "snapstart"]
 ---
 
